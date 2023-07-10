@@ -97,6 +97,32 @@
 	```zsh
 	python manage.py createsuperuser
 	```
+* `モデル`をAdminページから利用できるようにするには、`project_name/app_name/admin.py`に以下のようにコードを記述する.
+	```python
+	#django_blog/blogs/admin.py
+	from django.contrib import admin
+	from .models import Blog
+
+
+
+	admin.site.register(Blog)
+	```
+* Adminページの`モデル`の表示などをカスタマイズするには、`project_name/app_name/admin.py`に以下のようにコードを記述する.
+	```python
+	#django_blog/blogs/admin.py
+	from django.contrib import admin
+	from .models import Blog
+
+
+
+	class BlogAdmin(admin.ModelAdmin):
+		list_display = ("id", "created_datetime", "updated_datetime")
+		list_display_links = ("id", "title")
+	
+
+
+	admin.site.register(Blog, BlogAdmin)
+	```
 <br />
 
 ## クエリセット
