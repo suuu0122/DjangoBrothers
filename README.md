@@ -165,6 +165,11 @@
 		```
 <br />
 
+## 画像
+* [Django画像を表示・アップロードする方法を実例付きで解説](https://itc.tokyo/django/setup-media-root/)
+* [ImageFieldの使い方 開発環境編](https://self-methods.com/django-imagefield-basic/)
+<br />
+
 ## Djangoの基礎
 ![django_basis](img/django_basis.png)
 <br />
