@@ -149,7 +149,7 @@
 		# django_blog/blogs/views.py
 		from django.shortcuts import render
 
-		from . model import Blog
+		from .models import Blog
 
 
 
