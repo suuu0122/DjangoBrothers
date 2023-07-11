@@ -168,6 +168,7 @@
 ## 画像
 * [Django画像を表示・アップロードする方法を実例付きで解説](https://itc.tokyo/django/setup-media-root/)
 * [ImageFieldの使い方 開発環境編](https://self-methods.com/django-imagefield-basic/)
+* [Djangoで画像を表示する方法](https://intellectual-curiosity.tokyo/2019/03/08/django%E3%81%A7%E7%94%BB%E5%83%8F%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95/)
 <br />
 
 ## Djangoの基礎
