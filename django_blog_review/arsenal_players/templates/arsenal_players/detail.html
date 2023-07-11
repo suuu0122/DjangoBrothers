@@ -14,6 +14,9 @@
 			<div class="card-body">
 				<h5 class="card-title">{{ player.name }}</h5>
 				<p class="card-text">{{ player.introduction }}</p>
+				<div class="text-end">
+					<a class="text-end btn btn-primary" href="{% url 'arsenal_players:index' %}" role="button">戻る</a>
+				</div>
 			</div>
 		</div>
 	</div>
