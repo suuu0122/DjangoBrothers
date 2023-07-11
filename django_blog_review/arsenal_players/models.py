@@ -3,9 +3,10 @@ from django.db import models
 
 
 class Player(models.Model):
-    name = models.CharField(blank=False, null=False, max_length=100)
-    birth_date = models.DateField(blank=True)
-    introduction = models.TextField(blank=True)
+    name             = models.CharField(blank=False, null=False, max_length=100)
+    img              = models.ImageField(null=True)
+    birth_date       = models.DateField(blank=True)
+    introduction     = models.TextField(blank=True)
     created_datetime = models.DateTimeField(auto_now_add=True)
     updated_datetime = models.DateTimeField(auto_now=True)
     
