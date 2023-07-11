@@ -13,6 +13,7 @@
 			<img src="/media/{{ player.img }}" class="card-img-top">
 			<div class="card-body">
 				<h5 class="card-title">{{ player.name }}</h5>
+				<p>{{ player.birth_date }}</p>
 				<p class="card-text">{{ player.introduction }}</p>
 				<div class="text-end">
 					<a class="text-end btn btn-primary" href="{% url 'arsenal_players:index' %}" role="button">戻る</a>
