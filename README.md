@@ -235,6 +235,72 @@
 	* `POST`は、**サーバに対して何かデータを送信したい場合** に使用される. `POST`は、データを送信することによってDBに新しいデータを追加することができる.
 	* CRUDのCreateでは、新しい情報をサーバに送信する必要があるので`POST`を使用する.
 	![create](img/create.png)
+* Create（フォームの作成）
+	* `project_name/app_name/forms.py`を作成する.
+		```python
+		# memo/app/forms.py
+		from django forms import ModelForm
+
+		from .models import Memo
+
+
+
+		class MemoForm(ModelForm):
+			class Meta:
+				model = Memo
+				fields = ["title", "text"]
+		```
+		* `ModelForm`は、各々のモデルに対応したフォームを作成してくれる. ここでは、`model=Memo`とすることで`Memo`モデルに対応したフォームを生成している.
+		* `fields = ["title", "text"]`とすることで、これらに対応する入力欄があるフォームが作成できる.
+	* `views.py`に追加する.
+		```python
+		# memo/app/views.py
+		from .forms import MemoForm
+
+
+
+		def new_memo(request):
+			form = MemoForm
+			return render(request, "app/new_memo.html", {"form": form})
+		```
+	* フォームを使用するテンプレートを作成する.
+		```html
+		<div>
+			<a href="{% url 'app:index' %}">ホームに戻る</a>
+		</div>
+
+		<form action="{% url 'app:new_memo' %}" method="POST">
+			{% csrf_token %}
+			{{ form.as_p }}
+			<button type="submit" class="btn">保存</button>
+		</form>
+		```
+		* HTMLの`form`タグで`{{ form }}`を囲むことで`MemoForm`をフォームとして表示する.
+		* `.as_p`を付けることで入力欄ごとに`p`タグで囲われることになるので、改行されて綺麗に表示される.
+		* `action`の部分では、フォームが投稿された時に実行される処理を定義する. **投稿された時** とは、`type="submit"`のボタンが押された時である.
+		* `method=POST`は、`POST`なので、フォームが入力したデータも一緒にサーバに送信される.
+		* `{% csrf_token %}`は、CSRF対策に必要なものであり、これが無いとエラーになる.
+	* フォームから受け取った情報を保存する.
+		```python
+		# memo/app/views.py
+		from django.shortcuts import redirect, render
+
+
+
+		def new_memo(request):
+			if request.method == "POST":
+				form = MemoForm(request.POST)
+				if form.is_valid():
+					form.save()
+					return redirect("app:index")
+			else:
+				from = MemoForm
+			return render(request, "app/new_memo.html", {"form": form})
+		```
+		* `form.save()`を実行することで、POSTで送信されたデータを保存する.
+		* `if form.is_valid()`は、生成されたインスタンスが正しい値を持っているかを検証している. ここでの`Memo`モデルは、`title`が150字より多かったり、`blank`ではいけないなどの条件を`models.py`で指定しているので、インスタンスがこれらの条件を満たしているかを判定している.
+	* モデルをベースとしないプレーンなフォームを作成することもできる. お問合せフォームなどのモデルとは関係のないフォームが必要な時はプレーンなフォームを使用する.
+<br />
 
 ## 参照
 * [DjangoBrothers](https://djangobrothers.com/)
