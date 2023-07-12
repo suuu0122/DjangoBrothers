@@ -213,5 +213,13 @@
 			```
 <br />
 
+## 404
+* `get_object_or_404()`
+	* `variable = Model.objects.get(id=id)`のように`get`メソッドを使用してインスタンスを取得できるが、`id`が存在しなかった場合エラーとなってしまう.
+	* `get_object_or_404()`は、存在しない`id`が指定された場合404ページを表示する.
+* [404ページのカスタマイズ](https://djangobrothers.com/blogs/django_404_page/)
+	* デフォルトの404ページは編集も可能である.
+<br />
+
 ## 参照
 * [DjangoBrothers](https://djangobrothers.com/)
