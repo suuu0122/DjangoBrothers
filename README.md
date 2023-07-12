@@ -175,5 +175,43 @@
 ![django_basis](img/django_basis.png)
 <br />
 
+## MTV
+* Djangoプロジェクトは、`Model`、`Templates`、`View`によって構成され、`MTV`構成と呼ぶ.
+* 新たにページを作成する時には、以下の3つの作業が必要となる.
+	1. URL設定（`urls.py`）
+	2. View設定（`views.py`）
+	3. Template設定（`html`）
+* MTVのイメージ図
+	![mtv](img/mtv.png)
+* URL設定
+	* URLは、プロジェクトディレクトリ（`project_name/project_name/`）内の`urls.py`で定義する. 通常は、アプリディレクトリ（`project_name/app_name/`）内に`urls.py`を作成して、それをインポートする.
+		![url_setting](img/url_setting.png)
+* View設定
+	* `View`は、アプリディレクトリ（`project_name/app_name/`）内の`views.py`で定義する.
+* Template設定
+	* `Template`は、アプリディレクトリ（`project_name/app_name/`）内に`templates`ディレクトリを作成し、その中にHTMLファイルを作成する（`project_name/app_name/templates/app_name/xxx.html`）.
+	* `templates`ディレクトリにもう一つディレクトリを作成する理由
+		* `views.py`の`render()`の第2引数では表示するテンプレートファイルを指定するが、Djangoのデフォルト設定ではアプリ内の`templates`ディレクトリを自動で参照する. したがって、第2引数に`app_name/xxx.html`を指定することで`project_name/app_name/templates/app_name/xxx.html`を指定していることになる.
+		* フォルダ構成を`project_name/app_name/templates/xxx.html`のように`templates`ディレクトリ直下にHTMLファイルを作成し、`views.py`の`render()`の第2引数に`xxx.html`を指定するという書き方もできる. しかし、この書き方だとapp1とapp2のように複数のアプリが存在し、それぞれが`index.html`という同名のファイルを保有している場合、`render(request, "index.html")`とすると、`render()`は常にapp1内の`templates`ディレクトリを参照してしまい、app2内の`index.html`は指定できなくなってしまう. 仮にapp2の中にある`views.py`で`render(request, "index.html")`と記述してもapp1の`index.html`を参照する. これは、テンプレートファイルを参照するときに、上のtemplatesディレクトリから探していくという決まりがあるからである.
+		* app内の`templates`ディレクトリを自動的に参照するのは、`project_name/project_name/settings.py`の`APP_DIRS`がTrueになっているからである.
+			```python
+			TEMPLATES = [
+    			{
+        			'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        			'DIRS': [],
+        			'APP_DIRS': True,
+        			'OPTIONS': {
+            			'context_processors': [
+                			'django.template.context_processors.debug',
+                			'django.template.context_processors.request',
+                			'django.contrib.auth.context_processors.auth',
+                			'django.contrib.messages.context_processors.messages',
+            			],
+        			},
+    			},
+			]
+			```
+<br />
+
 ## 参照
 * [DjangoBrothers](https://djangobrothers.com/)
