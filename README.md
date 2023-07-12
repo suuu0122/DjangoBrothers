@@ -280,7 +280,7 @@
 		* `action`の部分では、フォームが投稿された時に実行される処理を定義する. **投稿された時** とは、`type="submit"`のボタンが押された時である.
 		* `method=POST`は、`POST`なので、フォームが入力したデータも一緒にサーバに送信される.
 		* `{% csrf_token %}`は、CSRF対策に必要なものであり、これが無いとエラーになる.
-	* フォームから受け取った情報を保存する.
+	* フォームから受け取った情報を保存するように関数を書き換える.
 		```python
 		# memo/app/views.py
 		from django.shortcuts import redirect, render
@@ -350,6 +350,103 @@
 			{% csrf_token %}
 			<button class="btn" type="submit" onclick="return confirm('本当に削除しますか？');">削除</button>
 		</form>
+		```
+* Update
+	* URLを`urls.py`に設定する.
+		```python
+		# memo/app/urls.py
+		from django.urls import path
+
+		from . import views
+
+
+
+		app_name = "app"
+		urlpatterns = [
+			path('', views.index, name="index"),
+			path('<int:memo_id>', views.detail, name="detail"),
+			path('new_memo', views.new_memo, name="new_memo"),
+			path('delete_memo/<int:memo_id>', views.delete_memo, name="delete_memo"),
+			# この1行を追加
+			path('edit_memo/<int:memo_id>', views.edit_memo, name="edit_memo"),
+		]
+		```
+	* `views.py`に編集する関数を作成する.
+		```python
+		# memo/app/views.py
+		from django.shortcuts import get_object_or_404, redirect
+		from django.views.decorators.http import require_POST
+
+
+
+		def edit_memo(request, memo_id):
+			memo = get_object_or_404(Memo, id=memo_id)
+			form = MemoForm
+			return render(request, "app/edit_memo.html", {"form": form, "memo": memo})
+		```
+	* テンプレートを作成する.
+		```html
+		<div>
+			<a href="{% url 'app:detail' memo.id %}">戻る</a>
+		</div>
+
+		<form action="{% url 'app:edit_memo' memo.id %}" method="POST">
+			{% csrf_token %}
+			{{ form.as_p }}
+			<button class="btn" type="submit">保存</button>
+		</form>
+		```
+	* `detail.html`に編集画面（`edit_memo.html`）へのリンクを追加する.
+		```html
+		<div>
+			<a href="{% url 'app:index' %}">ホームに戻る</a>
+		</div>
+
+		<h2>{{ memo.title }}</h2>
+
+		<div>
+			{{ memo.text | lienbreaks | urlize }}
+		</div>
+
+		<button><a class="btn" href="{% url 'app:edit_memo' memo.pk %}">編集</a></button>
+
+		<form method="post" action="{% url 'app:delete_memo' memo.pk %}">
+			{% csrf_token %}
+			<button class="btn" type="submit" onclick="return confirm('本当に削除しますか？');">削除</button>
+		</form>
+		```
+	* 編集時に元のデータがフォームに入っている状態にするために関数を書き換える.
+		```python
+		# memo/app/views.py
+		from django.shortcuts import get_object_or_404, redirect
+		from django.views.decorators.http import require_POST
+
+
+
+		def edit_memo(request, memo_id):
+			memo = get_object_or_404(Memo, id=memo_id)
+			form = MemoForm(instance=memo)
+			return render(request, "app/edit_memo.html", {"form": form, "memo": memo})
+		```
+		* `MemoForm`に`instance`という引数を与え、元データである`memo`インスタンスを指定することで、指定したインスタンスに対応したフォームが作成される.
+	* フォームから受け取った情報を保存するように関数を書き換える.
+		```python
+		# memo/app/views.py
+		from django.shortcuts import get_object_or_404, redirect
+		from django.views.decorators.http import require_POST
+
+
+
+		def edit_memo(request, memo_id):
+			memo = get_object_or_404(Memo, id=memo_id)
+			if request.method == "POST":
+				form = MemoForm(request.POST, instance=memo)
+				if form.is_valid():
+					form.save()
+					return redirect("app:index")
+			else:
+				form = MemoForm(instance=memo)
+			return render(request, "app/edit_memo.html", {"form": form, "memo": memo})
 		```
 <br />
 
