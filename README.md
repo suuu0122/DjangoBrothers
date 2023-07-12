@@ -300,6 +300,57 @@
 		* `form.save()`を実行することで、POSTで送信されたデータを保存する.
 		* `if form.is_valid()`は、生成されたインスタンスが正しい値を持っているかを検証している. ここでの`Memo`モデルは、`title`が150字より多かったり、`blank`ではいけないなどの条件を`models.py`で指定しているので、インスタンスがこれらの条件を満たしているかを判定している.
 	* モデルをベースとしないプレーンなフォームを作成することもできる. お問合せフォームなどのモデルとは関係のないフォームが必要な時はプレーンなフォームを使用する.
+* Delete
+	* URLを`urls.py`に設定する.
+		```python
+		# memo/app/urls.py
+		from django.urls import path
+
+		from . import views
+
+
+
+		app_name = "app"
+		urlpatterns = [
+			path('', views.index, name="index"),
+			path('<int:memo_id>', views.detail, name="detail"),
+			path('new_memo', views.new_memo, name="new_memo"),
+			# この1行を追加
+			path('delete_memo/<int:memo_id>', views.delete_memo, name="delete_memo"),
+		]
+		```
+	* `views.py`に削除する関数を作成する.
+		```python
+		# memo/app/views.py
+		from django.shortcuts import get_object_or_404, redirect
+		from django.views.decorators.http import require_POST
+
+
+
+		@request_POST
+		def delete_memo(request, memo_id):
+			memo = get_object_or_404(Memo, id=memo_id)
+			memo.delete()
+			return redirect("app:index")
+		```
+		* `@request_POST`は、POSTメソッドの時にのみ削除機能が実行されるようにするためのデコレータである. このデコレータが無い場合、そのURLにアクセスした（GET）時にも削除機能が実行されてしまう.
+	* テンプレートを作成する.
+		```html
+		<div>
+			<a href="{% url 'app:index' %}">ホームに戻る</a>
+		</div>
+
+		<h2>{{ memo.title }}</h2>
+
+		<div>
+			{{ memo.text | linebreaks | urlize }}
+		</div>
+
+		<form method="post" action="{% url 'app:delete_memo' memo.pk %}">
+			{% csrf_token %}
+			<button class="btn" type="submit" onclick="return confirm('本当に削除しますか？');">削除</button>
+		</form>
+		```
 <br />
 
 ## 参照
