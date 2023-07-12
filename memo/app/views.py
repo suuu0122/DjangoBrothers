@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 
 from .forms import MemoForm
 from .models import Memo
@@ -26,3 +27,11 @@ def new_memo(request):
     else:
         form = MemoForm
     return render(request, "app/new_memo.html", {"form": form})
+
+
+
+@require_POST
+def delete_memo(request, memo_id):
+    memo = get_object_or_404(Memo, id=memo_id)
+    memo.delete()
+    return redirect("app:index")
