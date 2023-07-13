@@ -450,5 +450,48 @@
 		```
 <br />
 
+## テンプレートの拡張
+* `<header>`や`<footer>`など複数のテンプレートで共通する部分は、`base.html`としてまとめることができる.
+	```html
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>DjangoBrosMemo</title>
+	</head>
+	<body>
+		<h1>DjangoBrosMemo</h1>
+
+		<div class="container">
+			{% block content %}{% endblock %}
+		</div>
+	</body>
+	</html>
+	```
+* 上記の`base.html`を他のテンプレートで利用するには、以下のようにHTMLファイルを記述する.
+	```html
+	{% extends "app/base.html" %}
+
+	{% block content %}
+
+		<a class="btn" href="{% url 'app:new_memo' %}">新規メモ作成</a>
+
+		{% for memo in memos %}
+			<a href="{% url 'app:detail' memo.id %}" class="memo-title">
+				<div>
+					{{ memo }}
+					<span class="updated_datetime">{{ memo.updated_datetime }}</span>
+				</div>
+			</a>
+		{% endfor %}
+	
+	{% endblock %}
+	```
+	* `{% extends 'app/base.html' %}`で、`base.html`を拡張することを示す.
+	* `{% block content %}`と`{% endblock %}`で囲まれた部分が、`base.html`の`{% block content %}`と`{% endblock %}`の中に取り込まれた形で表示される.
+<br />
+
 ## 参照
 * [DjangoBrothers](https://djangobrothers.com/)
