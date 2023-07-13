@@ -493,5 +493,34 @@
 	* `{% block content %}`と`{% endblock %}`で囲まれた部分が、`base.html`の`{% block content %}`と`{% endblock %}`の中に取り込まれた形で表示される.
 <br />
 
+## CSSファイルの適用
+* `project_name/app_name/static/app_name/css/style.css`としてCSSファイルを作成する.
+* CSSを使用するHTMLファイルに以下のように記述する.
+	```html
+	{% load static %}
+
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" type="text/css" href="{% static 'app/css/style.css' %}">
+		<title>DjangoBrosMemo</title>
+	</head>
+	<body>
+		<h1>DjangoBrosMemo</h1>
+
+		<div class="container">
+			{% block content %}{% endblock %}
+		</div>
+	</body>
+	</html>
+	```
+	* `{% load static %}`により`static`テンプレートタグを使用できるようにする.
+	* `{% static 'app/css/style.css' %}`は、`static`テンプレートタグであり、パスを指定することによって、自動的に`static`ディレクトリ配下の静的ファイルを読み込んでくれる.
+* リロードしてもCSSが適用されない場合は、スーパーリロード（キャッシュをクリアした上で再度読み込みをすること）を行う. 開発環境では、サーバを`Ctrl + C`で一度停止し、もう一度`python manage.py runserver`でサーバを立ち上げればよい.
+<br />
+
 ## 参照
 * [DjangoBrothers](https://djangobrothers.com/)
