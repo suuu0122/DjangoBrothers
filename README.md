@@ -85,7 +85,7 @@
 	* `def __str__(self)`は、管理ページ（http://127.0.0.1:8000/admin/）などで各インスタンスを表示する時に表示するものを記述している.
 * `モデル`はあくまでもデータベースの設計図であるため、`モデル`をもとに実際にデータベースを作成するには **マイグレート** する必要がある. **マイグレート** とは、`project_name/app_name/models.py`で定義したデータベースの設計を実際にデータベースに反映させることである. **マイグレート** するには以下の2つのコマンドを実行する. `project_name/app_name/models.py`に変更を加えた時は、その都度マイグレート処理（以下2つのコマンドの実行）をする必要がある.
 	```zsh
-	python manage.py makemigrations
+	python manage.py makemigrations [app_name]
 	python manage.py migrate
 	```
 	* `python manage.py makemigrations`は、**マイグレーションファイル** を作成するためのコマンドである. **マイグレーションファイル** は、`project_name/app_name/models.py`で作成したデータベースの設計情報がまとめられたファイルである. このコマンドにより、`project_name/app_name/migrations/`のなkにマイグレーションファイルが新たに追加される.
